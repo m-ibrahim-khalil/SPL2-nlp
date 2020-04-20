@@ -18,8 +18,7 @@ def write_to_file(out_file, line):
 
 
 def data_from_json(filename):
-    """Loads JSON data from filename and returns"""
-    with open(filename) as data_file:
+    with open(filename, encoding='utf8') as data_file:
         data = json.load(data_file)
     return data
 
@@ -30,10 +29,6 @@ def tokenize(sequence):
 
 
 def total_exs(dataset):
-    """
-    Returns the total number of (context, question, answer) triples,
-    given the data read from the SQuAD json file.
-    """
     total = 0
     for article in dataset['data']:
         for para in article['paragraphs']:
@@ -45,17 +40,9 @@ def reporthook(t):
     """https://github.com/tqdm/tqdm"""
     last_b = [0]
 
-    def inner(b=1, bsize=1, tsize=None):
-        """
-        b: int, optional
-            Number of blocks just transferred [default: 1].
-        bsize: int, optional
-            Size of each block (in tqdm units) [default: 1].
-        tsize: int, optional
-            Total size (in tqdm units). If [default: None] remains unchanged.
-        """
-        if tsize is not None:
-            t.total = tsize
+    def inner(b=1, bsize=1, t_size=None):
+        if t_size is not None:
+            t.total = t_size
         t.update((b - last_b[0]) * bsize)
         last_b[0] = b
 
@@ -63,31 +50,19 @@ def reporthook(t):
 
 
 def get_char_word_loc_mapping(context, context_tokens):
-    """
-    Return a mapping that maps from character locations to the corresponding token locations.
-    If we're unable to complete the mapping e.g. because of special characters, we return None.
-    Inputs:
-      context: string (unicode)
-      context_tokens: list of strings (unicode)
-    Returns:
-      mapping: dictionary from ints (character locations) to (token, token_idx) pairs
-        Only ints corresponding to non-space character locations are in the keys
-        e.g. if context = "hello world" and context_tokens = ["hello", "world"] then
-        0,1,2,3,4 are mapped to ("hello", 0) and 6,7,8,9,10 are mapped to ("world", 1)
-    """
-    acc = ''  # accumulator
+    accumulator = ''
     current_token_idx = 0  # current word loc
     mapping = dict()
 
     for char_idx, char in enumerate(context):  # step through original characters
         if char != u' ' and char != u'\n':  # if it's not a space:
-            acc += char  # add to accumulator
+            accumulator += char  # add to accumulator
             context_token = (context_tokens[current_token_idx])  # current word token
-            if acc == context_token:  # if the accumulator now matches the current word token
-                syn_start = char_idx - len(acc) + 1  # char loc of the start of this word
+            if accumulator == context_token:  # if the accumulator now matches the current word token
+                syn_start = char_idx - len(accumulator) + 1  # char loc of the start of this word
                 for char_loc in range(syn_start, char_idx + 1):
-                    mapping[char_loc] = (acc, current_token_idx)  # add to mapping
-                acc = ''  # reset accumulator
+                    mapping[char_loc] = (accumulator, current_token_idx)  # add to mapping
+                accumulator = ''  # reset accumulator
                 current_token_idx += 1
 
     if current_token_idx != len(context_tokens):
@@ -97,22 +72,8 @@ def get_char_word_loc_mapping(context, context_tokens):
 
 
 def preprocess_and_write(dataset, tier, out_dir):
-    """Reads the dataset, extracts context, question, answer, tokenizes them,
-    and calculates answer span in terms of token indices.
-    Note: due to tokenization issues, and the fact that the original answer
-    spans are given in terms of characters, some examples are discarded because
-    we cannot get a clean span in terms of tokens.
-    This function produces the {train/dev}.{context/question/answer/span} files.
-    Inputs:
-      dataset: read from JSON
-      tier: string ("train" or "dev")
-      out_dir: directory to write the preprocessed files
-    Returns:
-      the number of (context, question, answer) triples written to file by the dataset.
-    """
-
-    num_exs = 0  # number of examples written to file
-    num_mappingprob, num_tokenprob, num_spanalignprob = 0, 0, 0
+    num_examples = 0
+    num_mapping_prob, num_token_prob, num_span_align_prob = 0, 0, 0
     examples = []
 
     for articles_id in tqdm(range(len(dataset['data'])), desc="Preprocessing {}".format(tier)):
@@ -136,7 +97,7 @@ def preprocess_and_write(dataset, tier, out_dir):
             # location (int) of a context token to a pair giving (word (string), word loc (int)) of that token
 
             if charloc2wordloc is None:  # there was a problem
-                num_mappingprob += len(qas)
+                num_mapping_prob += len(qas)
                 continue  # skip this context example
 
             # for each question, process the question and answer and write to file
@@ -148,48 +109,37 @@ def preprocess_and_write(dataset, tier, out_dir):
 
                 # of the three answers, just take the first
                 ans_text = (qn['answers'][0]['text']).lower()  # get the answer text
-                ans_start_charloc = qn['answers'][0]['answer_start']  # answer start loc (character count)
-                ans_end_charloc = ans_start_charloc + len(ans_text)  # answer end loc (character count) (exclusive)
+                ans_start_char_loc = qn['answers'][0]['answer_start']  # answer start loc (character count)
+                ans_end_char_loc = ans_start_char_loc + len(ans_text)  # answer end loc (character count) (exclusive)
 
                 # Check that the provided character spans match the provided answer text
-                if context[ans_start_charloc:ans_end_charloc] != ans_text:
-                    # Sometimes this is misaligned, mostly because "narrow builds" of Python 2 interpret certain
-                    # Unicode characters to have length 2
-                    # https://stackoverflow.com/questions/29109944/python-returns-length-of-2-for-single-unicode
-                    # -character-string We should upgrade to Python 3 next year!
-                    num_spanalignprob += 1
+                if context[ans_start_char_loc:ans_end_char_loc] != ans_text:
+                    num_span_align_prob += 1
                     continue
 
-                # get word locs for answer start and end (inclusive)
-                ans_start_wordloc = charloc2wordloc[ans_start_charloc][1]  # answer start word loc
-                ans_end_wordloc = charloc2wordloc[ans_end_charloc - 1][1]  # answer end word loc
-                assert ans_start_wordloc <= ans_end_wordloc
-
-                # Check retrieved answer tokens match the provided answer text.
-                # Sometimes they won't match, e.g. if the context contains the phrase "fifth-generation"
-                # and the answer character span is around "generation",
-                # but the tokenizer regards "fifth-generation" as a single token.
-                # Then ans_tokens has "fifth-generation" but the ans_text is "generation", which doesn't match.
-                ans_tokens = context_tokens[ans_start_wordloc:ans_end_wordloc + 1]
+                # get word locations for answer start and end (inclusive)
+                ans_start_word_loc = charloc2wordloc[ans_start_char_loc][1]  # answer start word loc
+                ans_end_word_loc = charloc2wordloc[ans_end_char_loc - 1][1]  # answer end word loc
+                assert ans_start_word_loc <= ans_end_word_loc
+                ans_tokens = context_tokens[ans_start_word_loc:ans_end_word_loc + 1]
                 if "".join(ans_tokens) != "".join(ans_text.split()):
-                    num_tokenprob += 1
-                    continue  # skip this question/answer pair
+                    num_token_prob += 1
+                    continue
 
                 examples.append((' '.join(context_tokens), ' '.join(question_tokens), ' '.join(ans_tokens),
-                                 ' '.join([str(ans_start_wordloc), str(ans_end_wordloc)])))
+                                 ' '.join([str(ans_start_word_loc), str(ans_end_word_loc)])))
 
-                num_exs += 1
+                num_examples += 1
 
     print("Number of (context, question, answer) triples discarded due to char -> token mapping problems: ",
-          num_mappingprob)
+          num_mapping_prob)
     print("Number of (context, question, answer) triples discarded because character-based answer span is unaligned "
-          "with tokenization: ", num_tokenprob)
+          "with tokenization: ", num_token_prob)
     print("Number of (context, question, answer) triples discarded due character span alignment problems (usually "
-          "Unicode problems): ", num_spanalignprob)
+          "Unicode problems): ", num_span_align_prob)
     print("Processed %i examples of total %i\n" % (
-        num_exs, num_exs + num_mappingprob + num_tokenprob + num_spanalignprob))
+        num_examples, num_examples + num_mapping_prob + num_token_prob + num_span_align_prob))
 
-    # shuffle examples
     indices = list(range(len(examples)))
     np.random.shuffle(indices)
 
@@ -200,8 +150,6 @@ def preprocess_and_write(dataset, tier, out_dir):
 
         for i in indices:
             (context, question, answer, answer_span) = examples[i]
-
-            # write tokenized data to file
             write_to_file(context_file, context)
             write_to_file(question_file, question)
             write_to_file(ans_text_file, answer)
