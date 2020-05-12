@@ -13,12 +13,6 @@ class W2VecLayer(Layer):
 
         super(W2VecLayer,self).__init__(**kwargs)
 
-    def build(self):
-        self.kernel=self.add_weight(name='kernel',
-                                    trainable=False)
-
-        super(W2VecLayer, self).build()
-
     def embedding(self,line,max_len):
         T=np.array([])
         for word in line.split() :

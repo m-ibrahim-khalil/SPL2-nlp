@@ -1,3 +1,28 @@
+from keras.layers import Layer
+from keras.layers import LSTM,Bidirectional
+
+class C2VecLayer(Layer) :
+    def __init__(self,**kwargs):
+        super(C2VecLayer,self).__init__(**kwargs)
+
+    def call(self,x):
+        context,question=x[0],x[1]
+        H=Bidirectional(LSTM(x[0].shape[2],
+                             activation='sigmoid',
+                             input_shape=(x[0].shape[1],x[0].shape[2]),
+                             return_sequences=True))
+        U=Bidirectional(LSTM(x[1].shape[2],
+                             activation='sigmoid',
+                             input_shape=(x[1].shape[1],x[1].shape[2]),
+                             return_sequences=True))
+        y=list()
+        y.append(H)
+        y.append(U)
+
+        return y
+
+
+'''
 from glove_embedding import embedding
 from tqdm import tqdm
 
@@ -53,3 +78,4 @@ def train_model(is_context,is_question,file_name) :
         model2.save_weights("question_emb_model.h5")
 
     print("Saved model to disk")
+'''
