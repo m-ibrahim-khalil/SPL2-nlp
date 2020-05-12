@@ -86,3 +86,5 @@ class BiAttentionLayer(Layer) :
         self.U_A=self.C2Q_Attention(question)
         self.H_A=self.Q2C_Attention(context)
         self.G=self.megamerge(context,self.U_A,self.H_A)
+        
+        return self.G
