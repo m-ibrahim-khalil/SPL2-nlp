@@ -1,12 +1,11 @@
-import codecs
 import numpy
 import keras
 import keras.backend as K
+import core_code.word_embedding as we
 
 __all__ = [
     'MaskedConv1D', 'MaskedFlatten',
-    'get_batch_input', 'get_embedding_layer', 'get_dicts_generator',
-    'get_word_list_eng', 'get_embedding_weights_from_file',
+    'get_batch_input', 'get_embedding_layer',
 ]
 
 
@@ -82,13 +81,13 @@ def get_batch_input(sentences,
 def get_embedding_layer(word_dict_len,
                         char_dict_len,
                         max_word_len,
-                        word_embd_dim=300,
+                        word_embd_dim=50,
                         char_embd_dim=30,
                         char_hidden_dim=150,
                         char_hidden_layer_type='lstm',
                         word_embd_weights=None,
                         char_embd_weights=None,
-                        word_embd_trainable=None,
+                        word_embd_trainable=False,
                         char_embd_trainable=None,
                         word_mask_zero=True,
                         char_mask_zero=True):
@@ -184,138 +183,39 @@ def get_embedding_layer(word_dict_len,
     return [word_input_layer, char_input_layer], embd_layer
 
 
-def get_dicts_generator(word_min_freq=4,
-                        char_min_freq=2,
-                        word_ignore_case=False,
-                        char_ignore_case=False):
-    """Get word and character dictionaries from sentences.
-    :param word_min_freq: The minimum frequency of a word.
-    :param char_min_freq: The minimum frequency of a character.
-    :param word_ignore_case: Word will be transformed to lower case before saving to dictionary.
-    :param char_ignore_case: Character will be transformed to lower case before saving to dictionary.
-    :return gen: A closure that accepts sentences and returns the dictionaries.
-    """
-    word_count, char_count = {}, {}
+def create_char_dicts(CHAR_PAD_ID=0, CHAR_UNK_ID=1, _CHAR_PAD='*', _CHAR_UNK='$'):
+    unique_chars = ['!', '"', '#', '$', '%', '&', "'", '(', ')', '+', ',', '-', '.', '/', '0', '1', '2', '3',
+                    '4', '5', '6', '7', '8', '9', ':', ';', '<', '=', '>', '?', '[', ']', '^', 'a', 'b', 'c', 'd',
+                    'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w',
+                    'x', 'y', 'z', '~', ]  # based on analysis in jupyter notebook
 
-    def get_dicts(sentence=None,
-                  return_dict=False):
-        """Update and return dictionaries for each sentence.
-        :param sentence: A list of strings representing the sentence.
-        :param return_dict: Returns the dictionaries if it is True.
-        :return word_dict, char_dict, max_word_len:
-        """
-        if sentence is not None:
-            for word in sentence:
-                if not word:
-                    continue
-                if word_ignore_case:
-                    word_key = word.lower()
-                else:
-                    word_key = word
-                word_count[word_key] = word_count.get(word_key, 0) + 1
-                for char in word:
-                    if char_ignore_case:
-                        char_key = char.lower()
-                    else:
-                        char_key = char
-                    char_count[char_key] = char_count.get(char_key, 0) + 1
-        if not return_dict:
-            return None
-        word_dict, char_dict = {'': 0, '<UNK>': 1}, {'': 0, '<UNK>': 1}
-        max_word_len = 0
-        for word, count in word_count.items():
-            if count >= word_min_freq:
-                word_dict[word] = len(word_dict)
-                max_word_len = max(max_word_len, len(word))
-        for char, count in char_count.items():
-            if count >= char_min_freq:
-                char_dict[char] = len(char_dict)
-        return word_dict, char_dict, max_word_len
+    num_chars = len(unique_chars)
 
-    return get_dicts
-
-
-def get_word_list_eng(text):
-    """A naive function that extracts English words from raw texts.
-    :param text: The raw text.
-    :return words: A list of strings.
-    """
-    words, index = [''], 0
-    while index < len(text):
-        while index < len(text) and ('a' <= text[index] <= 'z' or 'A' <= text[index] <= 'Z'):
-            words[-1] += text[index]
-            index += 1
-        if words[-1]:
-            words.append('')
-        while index < len(text) and not ('a' <= text[index] <= 'z' or 'A' <= text[index] <= 'Z'):
-            if text[index] != ' ':
-                words[-1] += text[index]
-            index += 1
-        if words[-1]:
-            words.append('')
-    if not words[-1]:
-        words.pop()
-    return words
-
-
-def get_embedding_weights_from_file(word_dict, file_path, ignore_case=False):
-    """Load pre-trained embeddings from a text file.
-    Each line in the file should look like this:
-        word feature_dim_1 feature_dim_2 ... feature_dim_n
-    The `feature_dim_i` should be a floating point number.
-    :param word_dict: A dict that maps words to indice.
-    :param file_path: The location of the text file containing the pre-trained embeddings.
-    :param ignore_case: Whether ignoring the case of the words.
-    :return weights: A numpy array.
-    """
-    pre_trained = {}
-    with codecs.open(file_path, 'r', 'utf8') as reader:
-        for line in reader:
-            line = line.strip()
-            if not line:
-                continue
-            parts = line.split()
-            if ignore_case:
-                parts[0] = parts[0].lower()
-            pre_trained[parts[0]] = list(map(float, parts[1:]))
-    embd_dim = len(next(iter(pre_trained.values())))
-    weights = [[0.0] * embd_dim for _ in range(max(word_dict.values()) + 1)]
-    for word, index in word_dict.items():
-        if not word:
-            continue
-        if ignore_case:
-            word = word.lower()
-        if word in pre_trained:
-            weights[index] = pre_trained[word]
-        else:
-            weights[index] = numpy.random.random((embd_dim,)).tolist()
-    return numpy.asarray(weights)
+    idx2char = dict(enumerate(unique_chars, 2))
+    idx2char[CHAR_PAD_ID] = _CHAR_PAD
+    idx2char[CHAR_UNK_ID] = _CHAR_UNK
+    char2idx = {v: k for k, v in idx2char.items()}
+    return char2idx, idx2char, num_chars
 
 
 if __name__ == '__main__':
-    sentences = [
-        ['All', 'work', 'and', 'no', 'play'],
-        ['makes', 'Jack', 'a', 'dull', 'boy', '.'],
-    ]
-    dict_generator = get_dicts_generator(
-        word_min_freq=2,
-        char_min_freq=2,
-        word_ignore_case=False,
-        char_ignore_case=False,
-    )
-    for sentence in sentences:
-        dict_generator(sentence)
-
-    word_dict, char_dict, max_word_len = dict_generator(return_dict=True)
+    directory = "F://Pycharm Projects//glove.6B.50d.txt"
+    output = we.get_glove(directory, 50)
+    emb_matrix = output[0]
+    word2id = output[1]
+    id2word = output[2]
+    word_dict = word2id
+    char_dict, _, _ = create_char_dicts()
 
     inputs, embd_layer = get_embedding_layer(
         word_dict_len=len(word_dict),
         char_dict_len=len(char_dict),
         max_word_len=16,
-        word_embd_dim=300,
-        char_embd_dim=50,
-        char_hidden_dim=150,
-        char_hidden_layer_type='lstm',
+        word_embd_dim=50,
+        char_embd_dim=30,
+        char_hidden_dim=100,
+        char_hidden_layer_type='cnn',
+        word_embd_weights=emb_matrix
     )
     model = keras.models.Model(inputs=inputs, outputs=embd_layer)
     model.summary()
