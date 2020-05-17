@@ -1,5 +1,7 @@
 from keras.layers import Layer
 import numpy as np
+import keras.backend as k
+import tensorflow as tf
 
 class BiAttentionLayer(Layer) :
 
@@ -23,15 +25,20 @@ class BiAttentionLayer(Layer) :
             A.append(self.softmax(row))
         return A
 
+    @tf.function
     def build_similarity_matrix(self,context,question):
-        similarity_matrix = list()
+
+        #similarity_matrix = np.zeros(shape=(766,766),dtype=float)
+        similarity_matrix=tf.Variable(lambda : tf.zeros([5,5]))
         row = 0
         for a in context:
             column = 0
             for b in question:
-                c = np.concatenate((a, b, np.multiply(a, b)))
-                alpha = np.dot(self.kernel, c)
-                similarity_matrix[row][column] = alpha
+                c=tf.concat([a,b,tf.multiply(a,b)],0)
+                alpha=(tf.tensordot(self.kernel,c,1))
+                print(alpha)
+                similarity_matrix[row,column] =tf.keras.backend.get_value(alpha)
+
                 column += 1
             row += 1
 
@@ -78,13 +85,16 @@ class BiAttentionLayer(Layer) :
             G.append(np.concatenate((context[t],U_A[t],np.multiply(context[t],U_A[t]),np.multiply(context[t],H_A[t]))))
         return G
 
+
     def call(self,x):
 
-        context, question = x[0][0], x[1][0]
+        context, question = x[0][0],x[1][0]
         self.similarity_matrix=self.build_similarity_matrix(context,question)
         self.attention=self.attention_distribution(self.similarity_matrix)
         self.U_A=self.C2Q_Attention(question)
         self.H_A=self.Q2C_Attention(context)
         self.G=self.megamerge(context,self.U_A,self.H_A)
         
-        return self.G
+        return tf.convert_to_tensor(self.G)
+
+
