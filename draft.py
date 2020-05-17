@@ -1,40 +1,35 @@
-'''import tensorflow as tf
-
-a=tf.Variable(tf.zeros([5,5]))
-a[2,3]=5
-print(a)'''
-
-
-
-'''import tensorflow as tf
+import tensorflow as tf
 from keras.layers import Layer
-class faltuLayer(Layer):
+
+class MyLayer1(Layer):
     def __init__(self,**kwargs):
-        super(faltuLayer,self).__init__(**kwargs)
+        super(MyLayer1,self).__init__(**kwargs)
 
     def call(self, x):
-        print(tf.keras.backend.get_value(x))
         return x
 
-class faltuLayer2(Layer):
+class MyLayer2(Layer):
     def __init__(self,**kwargs):
-        super(faltuLayer2,self).__init__(**kwargs)
+        super(MyLayer2,self).__init__(**kwargs)
 
     def call(self, x):
-        with tf.compat.v1.Session() as sess:
-            print(sess.run(x))
+        temp_list=list()
+        a=tf.ones([1,])
+        b=tf.tensordot(x,a,1)
+        temp_list.append(b.numpy()) # I stucked here. I can't extract the value of b.
         return x
 
-x=tf.Variable(tf.zeros([500,500]))
-print(x)
-fal=faltuLayer()
-fal2=faltuLayer2()
-y=fal(x)
-fal2(y)'''
+x=tf.Variable(tf.zeros([1,]))
+myLayer1=MyLayer1()
+myLayer2=MyLayer2()
+
+y=myLayer1(x)
+myLayer2(y)
 
 
 
-from Word_embedding import W2VecLayer
+
+'''from Word_embedding import W2VecLayer
 from contexual_embedding import C2VecLayer
 from BiDAF import BiAttentionLayer
 
@@ -43,5 +38,5 @@ x=w2vec.call(['i am dip','who i'])
 c2vec=C2VecLayer()
 y=c2vec(x)
 bidaf = BiAttentionLayer()
-z=bidaf(y)
+z=bidaf(y)'''
 
