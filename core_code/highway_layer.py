@@ -7,6 +7,7 @@ import core_code.word_embedding as we
 import core_code.word_char_embd as wce
 import numpy as np
 
+
 class Highway(Layer):
 
     activation = None
@@ -15,8 +16,8 @@ class Highway(Layer):
     def __init__(self, activation='relu', transform_gate_bias=-1, **kwargs):
         self.activation = activation
         self.transform_gate_bias = transform_gate_bias
-        self.dense_1 = None
-        self.dense_2 = None
+        # self.dense_1 = None
+        # self.dense_2 = None
         super(Highway, self).__init__(**kwargs)
 
     def build(self, input_shape):
@@ -63,5 +64,14 @@ if __name__ == '__main__':
     word_dict = word2id
     char_dict, _, _ = wce.create_char_dicts()
     question_layer = TimeDistributed(highway_layer, name=highway_layer.name + "_qtd")
-    question_embedding = question_layer(tf.convert_to_tensor([emb_matrix[word2id['what']],emb_matrix[word2id['is']]]))
+    # question_embedding = question_layer(emb_matrix[word2id['what']])
+    # print(question_embedding)
+    emb = np.array([[emb_matrix[word2id['what']],emb_matrix[word2id['what']]]])
+    print(emb)
+    #print(tf.shape(emb))
+    emb = tf.convert_to_tensor(emb,dtype=tf.float32)
+    print(tf.shape(emb))
+    print(emb)
+    print(emb.shape)
+    question_embedding = question_layer(emb)
     print(question_embedding)
