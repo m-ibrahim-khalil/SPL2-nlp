@@ -15,86 +15,73 @@ class BiAttentionLayer(Layer) :
                                     trainable=True)
         super(BiAttentionLayer, self).build(input_shape)
 
-    def softmax(self,x):
-        e_x = np.exp(x - np.max(x))
-        return e_x / e_x.sum(axis=0)
-
-    def attention_distribution(self,similarity_matrix):
-        A=list()
-        for row in similarity_matrix:
-            A.append(self.softmax(row))
-        return A
-
     @tf.function
     def build_similarity_matrix(self,context,question):
 
-        #similarity_matrix = np.zeros(shape=(766,766),dtype=float)
-        similarity_matrix=tf.Variable(lambda : tf.zeros([5,5]))
-        row = 0
-        for a in context:
-            column = 0
-            for b in question:
-                c=tf.concat([a,b,tf.multiply(a,b)],0)
-                alpha=(tf.tensordot(self.kernel,c,1))
-                print(alpha)
-                similarity_matrix[row,column] =tf.keras.backend.get_value(alpha)
+        similarity_matrix = tf.constant([])
+        for i in range(5):
+            for j in range(5):
+                c = tf.concat([context[i], question[j], tf.multiply(context[i], question[j])], 0)
+                alpha = tf.tensordot(self.kernel, c, 1)
+                alpha = tf.reshape(alpha, shape=(1,))
+                similarity_matrix = tf.concat([similarity_matrix, alpha], 0)
 
-                column += 1
-            row += 1
-
+        similarity_matrix=tf.reshape(similarity_matrix,shape=(5,5))
         return similarity_matrix
 
+    @tf.function
     def C2Q_Attention(self,question):
-        U_A=list()
 
-        for row in self.attention:
-            t=0
-            temp=[0 for i in range(len(question[t]))]
-            for element in row :
-                a=np.dot(element,question[t])
-                temp=[c+d for c,d in zip(temp,a)]
-                t+=1
-            U_A.append(temp)
+        U_A = tf.constant([])
+
+        for j in range(5) :
+            temp = tf.zeros(shape=(100,), dtype=tf.float32)
+            for i in range(5) :
+                c=tf.tensordot(self.attention[j][i] ,question[i],0)
+                temp+=c
+
+            U_A=tf.concat([U_A,temp],0)
+
+        U_A=tf.reshape(U_A,shape=(5,100))
 
         return U_A
 
+    @tf.function
     def Q2C_Attention(self,context):
-        H_A=list()
-        z=list()
 
-        for row in self.similarity_matrix :
-            z.append(max(row))
+        b=tf.reduce_max(self.attention,axis=1)
 
-        b=self.softmax(z)
+        temp=tf.zeros(shape=(100,), dtype=tf.float32)
 
-        temp=[0 for i in range(context.shape[0])]
-        t=0
-        for element in b:
-            a=np.dot(element,context[t])
-            temp = [c + d for c, d in zip(temp, a)]
-            t+=1
+        for i in range(5):
+            temp+=tf.tensordot(b[i],context[i],0)
 
-        for i in range(len(context)) :
-            H_A.append(temp)
+        H_A=tf.constant([])
 
-        return H_A
+        for i in range(5):
+            H_A=tf.concat([H_A,temp],0)
+
+        return tf.reshape(H_A,shape=(5,100))
+
 
     def megamerge(self,context,U_A,H_A):
-        G=list()
-        for t in range(len(context)):
-            G.append(np.concatenate((context[t],U_A[t],np.multiply(context[t],U_A[t]),np.multiply(context[t],H_A[t]))))
-        return G
+        G=tf.constant([])
+        for t in range(5):
+            temp=tf.concat([context[t],U_A[t],tf.multiply(context[t],U_A[t]),tf.multiply(context[t],H_A[t])],0)
+            G=tf.concat([G,temp],0)
+            #G.append(np.concatenate((context[t],U_A[t],np.multiply(context[t],U_A[t]),np.multiply(context[t],H_A[t]))))
+        return tf.reshape(G,shape=(5,400))
 
 
     def call(self,x):
 
         context, question = x[0][0],x[1][0]
         self.similarity_matrix=self.build_similarity_matrix(context,question)
-        self.attention=self.attention_distribution(self.similarity_matrix)
+        self.attention=tf.nn.softmax(self.similarity_matrix)
         self.U_A=self.C2Q_Attention(question)
         self.H_A=self.Q2C_Attention(context)
         self.G=self.megamerge(context,self.U_A,self.H_A)
         
-        return tf.convert_to_tensor(self.G)
+        return self.G
 
 
