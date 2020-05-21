@@ -1,5 +1,5 @@
 from keras import backend as K
-import  tensorflow as tf
+import tensorflow as tf
 from keras.engine.topology import Layer
 from keras.layers import Dense, Activation, Multiply, Add, Lambda, TimeDistributed
 from keras.initializers import Constant
@@ -16,8 +16,9 @@ class Highway(Layer):
     def __init__(self, activation='relu', transform_gate_bias=-1, **kwargs):
         self.activation = activation
         self.transform_gate_bias = transform_gate_bias
-        # self.dense_1 = None
-        # self.dense_2 = None
+        self.dense_1 = None
+        self.dense_2 = None
+        self.supports_masking = True
         super(Highway, self).__init__(**kwargs)
 
     def build(self, input_shape):
@@ -32,7 +33,13 @@ class Highway(Layer):
 
         super(Highway, self).build(input_shape)  # Be sure to call this at the end
 
-    def call(self, x):
+    def compute_mask(self, inputs, mask=None):
+        return mask
+
+    def call(self, x, mask = None):
+        if mask is not None:
+            mask = K.cast(mask, K.floatx())
+            x *= K.expand_dims(mask, axis=-1)
         dim = K.int_shape(x)[-1]
         transform_gate = self.dense_1(x)
         transform_gate = Activation("sigmoid")(transform_gate)
@@ -63,7 +70,7 @@ if __name__ == '__main__':
     id2word = output[2]
     word_dict = word2id
     char_dict, _, _ = wce.create_char_dicts()
-    question_layer = TimeDistributed(highway_layer, name=highway_layer.name + "_qtd")
+    # question_layer = TimeDistributed(highway_layer, name=highway_layer.name + "_qtd")
     # question_embedding = question_layer(emb_matrix[word2id['what']])
     # print(question_embedding)
     emb = np.array([[emb_matrix[word2id['what']],emb_matrix[word2id['what']]]])
@@ -73,5 +80,5 @@ if __name__ == '__main__':
     print(tf.shape(emb))
     print(emb)
     print(emb.shape)
-    question_embedding = question_layer(emb)
+    question_embedding = highway_layer(emb)
     print(question_embedding)

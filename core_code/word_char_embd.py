@@ -1,5 +1,5 @@
 import numpy
-import keras
+from tensorflow import keras
 import keras.backend as K
 import core_code.word_embedding as we
 
@@ -36,13 +36,13 @@ class MaskedFlatten(keras.layers.Flatten):
 
 
 def get_batch_input(sentences,
-                    max_word_len,
                     word_dict,
                     char_dict,
+                    max_word_len=16,
                     word_unknown=1,
                     char_unknown=1,
-                    word_ignore_case=False,
-                    char_ignore_case=False):
+                    word_ignore_case=True,
+                    char_ignore_case=True):
     """Convert sentences to desired input tensors.
     :param sentences: A list of lists representing the input sentences.
     :param max_word_len: The maximum allowed length of word.
@@ -217,5 +217,39 @@ if __name__ == '__main__':
         char_hidden_layer_type='cnn',
         word_embd_weights=emb_matrix
     )
-    model = keras.models.Model(inputs=inputs, outputs=embd_layer)
+
+    sentences = [
+        ['All', 'work', 'and', 'no', 'play'],
+        ['makes', 'Jack', 'a', 'dull', 'boy', '.'],
+    ]
+    # wc_embd = WordCharEmbd(
+    #     word_min_freq=0,
+    #     char_min_freq=0,
+    #     word_ignore_case=False,
+    #     char_ignore_case=False,
+    # )
+    # for sentence in sentences:
+    #     wc_embd.update_dicts(sentence)
+
+    lstm_layer = keras.layers.LSTM(units=5, name='LSTM')(embd_layer)
+    softmax_layer = keras.layers.Dense(units=1, activation='softmax', name='Softmax')(lstm_layer)
+    model = keras.models.Model(inputs=inputs, outputs=softmax_layer)
+    model.compile(
+        optimizer='adam',
+        loss=keras.losses.sparse_categorical_crossentropy,
+        metrics=[keras.metrics.sparse_categorical_accuracy],
+    )
     model.summary()
+
+    in_ = get_batch_input(sentences,word_dict,char_dict)
+    print(in_[0])
+    print(in_[1])
+
+    model.fit(
+        in_,
+        steps_per_epoch=200,
+        epochs=1,
+    )
+
+
+

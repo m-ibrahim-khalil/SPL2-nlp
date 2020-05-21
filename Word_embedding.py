@@ -1,9 +1,9 @@
-from vocab import get_glove
+from core_code.word_embedding import get_glove
 from keras.layers import Layer
 import tensorflow as tf
 import numpy as np
 
-emb_matrix, word2id, id2word=get_glove("F://Pycharm Projects//Spl2-nlp-QA//glove.6B.50d.txt",50)
+emb_matrix, word2id, id2word=get_glove("F://Pycharm Projects//glove.6B.50d.txt",50)
 glove_dim=50
 
 class W2VecLayer(Layer):
