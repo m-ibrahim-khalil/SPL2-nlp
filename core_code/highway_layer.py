@@ -1,5 +1,6 @@
 from keras import backend as K
 import tensorflow as tf
+import keras
 from keras.engine.topology import Layer
 from keras.layers import Dense, Activation, Multiply, Add, Lambda, TimeDistributed
 from keras.initializers import Constant
@@ -76,9 +77,11 @@ if __name__ == '__main__':
     emb = np.array([[emb_matrix[word2id['what']],emb_matrix[word2id['what']]]])
     print(emb)
     #print(tf.shape(emb))
-    emb = tf.convert_to_tensor(emb,dtype=tf.float32)
+    emb = tf.convert_to_tensor(emb, dtype=tf.float32)
     print(tf.shape(emb))
     print(emb)
     print(emb.shape)
+    highway_layer = keras.layers.Dense(units=5, name='d1')(highway_layer)
     question_embedding = highway_layer(emb)
     print(question_embedding)
+    print(highway_layer.losses)

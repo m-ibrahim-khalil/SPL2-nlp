@@ -2,10 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="6f8e4001-da9d-464b-aea4-6cd00cde7e5c" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/core_code/test.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Word_embedding.py" beforeDir="false" afterPath="$PROJECT_DIR$/Word_embedding.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/contexual_embedding.py" beforeDir="false" afterPath="$PROJECT_DIR$/contexual_embedding.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/core_code/highway_layer.py" beforeDir="false" afterPath="$PROJECT_DIR$/core_code/highway_layer.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core_code/test.py" beforeDir="false" afterPath="$PROJECT_DIR$/core_code/test.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/core_code/word_char_embd.py" beforeDir="false" afterPath="$PROJECT_DIR$/core_code/word_char_embd.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/draft.py" beforeDir="false" afterPath="$PROJECT_DIR$/draft.py" afterDir="false" />
     </list>
@@ -38,10 +38,10 @@
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../bidaf-keras-master" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
-  <component name="RunManager" selected="Python.highway_layer">
+  <component name="RunManager" selected="Python.test">
     <configuration name="Char_embedding" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="Spl2-nlp-QA" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -154,9 +154,9 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.highway_layer" />
-        <item itemvalue="Python.word_char_embd" />
         <item itemvalue="Python.test" />
+        <item itemvalue="Python.word_char_embd" />
+        <item itemvalue="Python.highway_layer" />
         <item itemvalue="Python.draft" />
         <item itemvalue="Python.Char_embedding" />
       </list>
@@ -183,7 +183,8 @@
       <workItem from="1589737525243" duration="4739000" />
       <workItem from="1589827503137" duration="7915000" />
       <workItem from="1589922676466" duration="4671000" />
-      <workItem from="1590051892590" duration="6292000" />
+      <workItem from="1590051892590" duration="6851000" />
+      <workItem from="1590082185581" duration="9396000" />
     </task>
     <task id="LOCAL-00001" summary="Character embedding layer added.">
       <created>1589306778119</created>
@@ -220,7 +221,14 @@
       <option name="project" value="LOCAL" />
       <updated>1589833323048</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="testing_code">
+      <created>1590071084353</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1590071084353</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -243,33 +251,42 @@
     <MESSAGE value="Character embedding layer added." />
     <MESSAGE value="word_char embedding layer updated" />
     <MESSAGE value="highway_layer added." />
-    <option name="LAST_COMMIT_MESSAGE" value="highway_layer added." />
+    <MESSAGE value="testing_code" />
+    <option name="LAST_COMMIT_MESSAGE" value="testing_code" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="393" y="7" key="CommitChangelistDialog2" timestamp="1589833322129">
+    <state x="401" y="215" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1590083093804">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="393" y="7" key="CommitChangelistDialog2/0.0.1536.824@0.0.1536.824" timestamp="1589833322129" />
-    <state x="403" y="112" key="FileChooserDialogImpl" timestamp="1589739751621">
+    <state x="401" y="215" key="#com.intellij.fileTypes.FileTypeChooser/0.0.1536.824@0.0.1536.824" timestamp="1590083093804" />
+    <state x="393" y="7" key="CommitChangelistDialog2" timestamp="1590071082258">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="403" y="112" key="FileChooserDialogImpl/0.0.1536.824@0.0.1536.824" timestamp="1589739751621" />
-    <state width="1493" height="397" key="GridCell.Tab.0.bottom" timestamp="1590070717764">
+    <state x="393" y="7" key="CommitChangelistDialog2/0.0.1536.824@0.0.1536.824" timestamp="1590071082258" />
+    <state x="93" y="93" width="1350" height="638" key="DiffContextDialog" timestamp="1590071599424">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="397" key="GridCell.Tab.0.bottom/0.0.1536.824@0.0.1536.824" timestamp="1590070717764" />
-    <state width="1493" height="397" key="GridCell.Tab.0.center" timestamp="1590070717764">
+    <state x="93" y="93" width="1350" height="638" key="DiffContextDialog/0.0.1536.824@0.0.1536.824" timestamp="1590071599424" />
+    <state x="403" y="112" key="FileChooserDialogImpl" timestamp="1590083154315">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="397" key="GridCell.Tab.0.center/0.0.1536.824@0.0.1536.824" timestamp="1590070717764" />
-    <state width="1493" height="397" key="GridCell.Tab.0.left" timestamp="1590070717764">
+    <state x="403" y="112" key="FileChooserDialogImpl/0.0.1536.824@0.0.1536.824" timestamp="1590083154315" />
+    <state width="1493" height="397" key="GridCell.Tab.0.bottom" timestamp="1590091875518">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="397" key="GridCell.Tab.0.left/0.0.1536.824@0.0.1536.824" timestamp="1590070717764" />
-    <state width="1493" height="397" key="GridCell.Tab.0.right" timestamp="1590070717764">
+    <state width="1493" height="397" key="GridCell.Tab.0.bottom/0.0.1536.824@0.0.1536.824" timestamp="1590091875518" />
+    <state width="1493" height="397" key="GridCell.Tab.0.center" timestamp="1590091875518">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="397" key="GridCell.Tab.0.right/0.0.1536.824@0.0.1536.824" timestamp="1590070717764" />
+    <state width="1493" height="397" key="GridCell.Tab.0.center/0.0.1536.824@0.0.1536.824" timestamp="1590091875518" />
+    <state width="1493" height="397" key="GridCell.Tab.0.left" timestamp="1590091875518">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state width="1493" height="397" key="GridCell.Tab.0.left/0.0.1536.824@0.0.1536.824" timestamp="1590091875518" />
+    <state width="1493" height="397" key="GridCell.Tab.0.right" timestamp="1590091875518">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state width="1493" height="397" key="GridCell.Tab.0.right/0.0.1536.824@0.0.1536.824" timestamp="1590091875518" />
     <state x="147" y="65" key="MergeDialog" timestamp="1589958480354">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
@@ -286,10 +303,10 @@
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state x="490" y="154" width="540" height="524" key="StructurePopup/0.0.1536.824@0.0.1536.824" timestamp="1590052268983" />
-    <state x="465" y="236" key="com.intellij.ide.util.TipDialog" timestamp="1590051895055">
+    <state x="465" y="236" key="com.intellij.ide.util.TipDialog" timestamp="1590082196320">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="465" y="236" key="com.intellij.ide.util.TipDialog/0.0.1536.824@0.0.1536.824" timestamp="1590051895055" />
+    <state x="465" y="236" key="com.intellij.ide.util.TipDialog/0.0.1536.824@0.0.1536.824" timestamp="1590082196320" />
     <state x="578" y="329" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1590051920231">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
@@ -299,9 +316,9 @@
     <SUITE FILE_PATH="coverage/Spl2_nlp_QA$word_embedding.coverage" NAME="word_embedding Coverage Results" MODIFIED="1587384060585" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/core_code" />
     <SUITE FILE_PATH="coverage/Spl2_nlp_QA$Char_embedding.coverage" NAME="Char_embedding Coverage Results" MODIFIED="1588588735261" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/core_code" />
     <SUITE FILE_PATH="coverage/Spl2_nlp_QA$squad_preproccess.coverage" NAME="squad_preproccess Coverage Results" MODIFIED="1587387717532" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/preproccess_squad" />
-    <SUITE FILE_PATH="coverage/Spl2_nlp_QA$draft.coverage" NAME="draft Coverage Results" MODIFIED="1589954548965" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/Spl2_nlp_QA$word_char_embd.coverage" NAME="word_char_embd Coverage Results" MODIFIED="1590070706067" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/core_code" />
-    <SUITE FILE_PATH="coverage/Spl2_nlp_QA$test.coverage" NAME="test Coverage Results" MODIFIED="1590052540123" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/core_code" />
-    <SUITE FILE_PATH="coverage/Spl2_nlp_QA$highway_layer.coverage" NAME="highway_layer Coverage Results" MODIFIED="1590070717749" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/core_code" />
+    <SUITE FILE_PATH="coverage/Spl2_nlp_QA$draft.coverage" NAME="draft Coverage Results" MODIFIED="1590071535138" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Spl2_nlp_QA$word_char_embd.coverage" NAME="word_char_embd Coverage Results" MODIFIED="1590087555800" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/core_code" />
+    <SUITE FILE_PATH="coverage/Spl2_nlp_QA$test.coverage" NAME="test Coverage Results" MODIFIED="1590091875507" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/core_code" />
+    <SUITE FILE_PATH="coverage/Spl2_nlp_QA$highway_layer.coverage" NAME="highway_layer Coverage Results" MODIFIED="1590085883451" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/core_code" />
   </component>
 </project>

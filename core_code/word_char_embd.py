@@ -213,7 +213,7 @@ if __name__ == '__main__':
         max_word_len=16,
         word_embd_dim=50,
         char_embd_dim=30,
-        char_hidden_dim=100,
+        char_hidden_dim=30,
         char_hidden_layer_type='cnn',
         word_embd_weights=emb_matrix
     )
@@ -231,9 +231,7 @@ if __name__ == '__main__':
     # for sentence in sentences:
     #     wc_embd.update_dicts(sentence)
 
-    lstm_layer = keras.layers.LSTM(units=5, name='LSTM')(embd_layer)
-    softmax_layer = keras.layers.Dense(units=1, activation='softmax', name='Softmax')(lstm_layer)
-    model = keras.models.Model(inputs=inputs, outputs=softmax_layer)
+    model = keras.models.Model(inputs=inputs, outputs=embd_layer)
     model.compile(
         optimizer='adam',
         loss=keras.losses.sparse_categorical_crossentropy,
@@ -245,11 +243,9 @@ if __name__ == '__main__':
     print(in_[0])
     print(in_[1])
 
-    model.fit(
-        in_,
-        steps_per_epoch=200,
-        epochs=1,
-    )
+    y = model(in_)
+
+    print(y)
 
 
 

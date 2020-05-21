@@ -12,9 +12,9 @@ class C2VecLayer(Layer) :
         x = tf.cast(x, tf.float32)
         context,question=x[0],x[1]
 
-        lstm=Bidirectional(LSTM(50,
+        lstm=Bidirectional(LSTM(80,
                              activation='sigmoid',
-                             input_shape=(766,50),
+                             input_shape=(766,80),
                              return_sequences=True))
 
         H=lstm(context)
