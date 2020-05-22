@@ -7,19 +7,20 @@ class C2VecLayer(Layer) :
     def __init__(self,**kwargs):
         super(C2VecLayer,self).__init__(**kwargs)
 
-    def call(self,x):
+    def call(self, x):
 
         x = tf.cast(x, tf.float32)
-        context,question=x[0],x[1]
+        context, question = x[0], x[1]
 
-        lstm=Bidirectional(LSTM(80,
+        lstm = Bidirectional(LSTM(80,
                              activation='sigmoid',
-                             input_shape=(766,80),
+                             input_shape=(5, 80),
                              return_sequences=True))
 
         H=lstm(context)
         U=lstm(question)
-
+        print (H)
+        print(U)
         y=list()
         y.append(H)
         y.append(U)

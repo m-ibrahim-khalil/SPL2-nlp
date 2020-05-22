@@ -4,6 +4,7 @@ import core_code.highway_layer as hwl
 import numpy
 from contexual_embedding import C2VecLayer
 from tensorflow import keras
+import tensorflow as tf
 import keras.backend as K
 
 directory = "F://Pycharm Projects//glove.6B.50d.txt"
@@ -26,21 +27,17 @@ inputs, embd_layer = wce.get_embedding_layer(
     )
 model1 = keras.models.Model(inputs=inputs, outputs=embd_layer)
 sentences = [
-        ['All', 'work', 'and', 'no', 'play'],
-        ['makes', 'Jack', 'a', 'dull', 'boy', '.'],
+        ['All', 'work', 'and', 'no', 'play']
 ]
 in_ = wce.get_batch_input(sentences,word_dict,char_dict)
 z = model1(in_)
 
 question = [
-        'who is jack ?',
-        'who i am ?'
+        'who is jack ma ?'
 ]
 
-question = [question[0].split(),question[1].split()]
+question = [question[0].split()]
 print(question)
-
-
 
 q_in = wce.get_batch_input(question, word_dict,char_dict)
 q_emb = model1(q_in)
@@ -53,14 +50,18 @@ highway_layer = hwl.Highway(transform_gate_bias=-2)
 H = highway_layer(z)
 U = highway_layer(q_emb)
 
-y = [H,U]
+H = tf.cast(H, dtype=tf.int32)
+U = tf.cast(U, dtype=tf.int32)
+
+y = tf.concat([H, U], 0)
+y = tf.reshape(y,[2,1,5,80])
 
 print(H)
 print(U)
 print(y)
 
 
-# contextualLayer = C2VecLayer()
-# y = contextualLayer(y)
-# print(y)
+contextualLayer = C2VecLayer()
+y = contextualLayer(y)
+print(y)
 
