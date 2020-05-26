@@ -8,6 +8,7 @@ class ModellingLayer(Layer):
 
     def build(self, input_shape):
         self.shape=input_shape
+        print("dukche 3 build")
 
         self.lstm1 = Bidirectional(LSTM(int(input_shape[1]/8),
                                    activation='sigmoid',
@@ -21,7 +22,7 @@ class ModellingLayer(Layer):
 
     def call(self,x):
         G=tf.reshape(x,shape=(1,self.shape[0],self.shape[1]))
-
+        print("dukche 3")
         self.M1=self.lstm1(G)
         self.M2=self.lstm2(self.M1)
 
@@ -37,4 +38,5 @@ class ModellingLayer(Layer):
         return tf.reshape(temp,shape=(2,self.shape[0],int(self.shape[1]*5/4)))
 
     def compute_output_shape(self, input_shape):
+        print("dukche 3")
         return (2,input_shape[0],int((input_shape[1]*5)/4))

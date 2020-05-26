@@ -10,6 +10,7 @@ class C2VecLayer(Layer) :
 
     def build(self, input_shape):
         self.shape=input_shape
+        print("dukche 1")
 
         self.lstm = Bidirectional(LSTM(input_shape[3],
                                   activation='sigmoid',
@@ -22,7 +23,7 @@ class C2VecLayer(Layer) :
         x = tf.cast(x, tf.float32)
         context=x[0]
         question=x[1]
-
+        print("dukche 1")
         H=self.lstm(context)
         U=self.lstm(question)
 
@@ -31,4 +32,5 @@ class C2VecLayer(Layer) :
         return tf.reshape(y,shape=(2,1,self.shape[2],self.shape[3]*2))
 
     def compute_output_shape(self, input_shape):
+        print("dukche 1")
         return (input_shape[0],input_shape[1],input_shape[2],input_shape[3]*2)

@@ -10,6 +10,7 @@ class BiAttentionLayer(Layer):
 
     def build(self, input_shape):
         self.shape=input_shape
+        print("dukche 2 build")
 
         self.kernel = self.add_weight(name='kernel',
                                       shape=(3 * input_shape[3],),
@@ -19,22 +20,23 @@ class BiAttentionLayer(Layer):
 
     @tf.function
     def build_similarity_matrix(self, context, question):
-
+        print("dukche 2 sm")
         similarity_matrix = tf.constant([])
-        for i in range(self.shape[2]):
-            for j in range(self.shape[2]):
+        for i in range(self.shape[-1]):
+            for j in range(self.shape[-1]):
                 c = tf.concat([context[i], question[j], tf.multiply(context[i], question[j])], 0)
                 alpha = tf.tensordot(self.kernel, c, 1)
                 alpha = tf.reshape(alpha, shape=(1,))
                 similarity_matrix = tf.concat([similarity_matrix, alpha], 0)
 
-        similarity_matrix = tf.reshape(similarity_matrix, shape=(self.shape[2], self.shape[2]))
+        similarity_matrix = tf.reshape(similarity_matrix, shape=(self.shape[-1], self.shape[2]))
         return similarity_matrix
 
     @tf.function
     def C2Q_Attention(self, question):
 
         U_A = tf.constant([])
+        print("dukche 2 c2q")
 
         for j in range(self.shape[2]):
             temp = tf.zeros(shape=(self.shape[3],), dtype=tf.float32)
@@ -52,6 +54,7 @@ class BiAttentionLayer(Layer):
     def Q2C_Attention(self, context):
 
         b = tf.reduce_max(self.attention, axis=1, )
+        print("dukche 2 q2c")
 
         temp = tf.zeros(shape=(self.shape[3],), dtype=tf.float32)
 
@@ -67,6 +70,7 @@ class BiAttentionLayer(Layer):
 
     def megamerge(self, context, U_A, H_A):
         G = tf.constant([])
+        print("dukche 2 mm")
         for t in range(self.shape[2]):
             temp = tf.concat([context[t], U_A[t], tf.multiply(context[t], U_A[t]), tf.multiply(context[t], H_A[t])], 0)
             G = tf.concat([G, temp], 0)
@@ -74,7 +78,7 @@ class BiAttentionLayer(Layer):
         return tf.reshape(G, shape=(self.shape[2], self.shape[3]*4))
 
     def call(self, x):
-
+        print("dukche 2")
         context, question = x[0][0], x[1][0]
         self.similarity_matrix = self.build_similarity_matrix(context, question)
         self.attention = tf.nn.softmax(self.similarity_matrix)
@@ -85,4 +89,5 @@ class BiAttentionLayer(Layer):
         return self.G
 
     def compute_output_shape(self, input_shape):
+        print("dukche 2")
         return (self.shape[2], self.shape[3]*4)

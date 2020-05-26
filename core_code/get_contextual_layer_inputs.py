@@ -27,27 +27,29 @@ model1 = keras.models.Model(inputs=inputs, outputs=embd_layer)
 
 def get_contextual_inputs(input):
     highway_layer = hwl.Highway(transform_gate_bias=-2)
-    context = [input[0].split()]
-    question = [input[1].split()]
-    context = wce.get_batch_input(context, word_dict, char_dict)
-    question = wce.get_batch_input(question, word_dict, char_dict)
+    contexts = [input[0].split()]
+    print(contexts[0])
+    print(len(contexts[0]))
+    questions = [input[1].split()]
+    context = wce.get_batch_input(contexts, word_dict, char_dict)
+    question = wce.get_batch_input(questions, word_dict, char_dict)
     context_embeding = model1(context)
     question_embeding = model1(question)
     H = highway_layer(context_embeding)
     U = highway_layer(question_embeding)
-    # print(H)
-    padcon = tf.constant(0,tf.float32,[1,765-len(context),80])
-    padqn = tf.constant(0,tf.float32,[1,765-len(question),80])
-    # print(padcon)
-    # print(len(context))
-    # print(len(question))
-    # print(padqn)
+    print(H)
+    padcon = tf.constant(0,tf.float32,[1,766-len(contexts[0]),80])
+    padqn = tf.constant(0,tf.float32,[1,766-len(questions[0]),80])
+    print(padcon)
+    print(len(context))
+    print(len(question))
+    print(padqn)
     H = tf.concat([H,padcon],1)
     U = tf.concat([U,padqn],1)
-    # print(H)
-    # print(U)
+    print(H)
+    print(U)
     y = tf.concat([H, U], 0)
-    # print(y)
+    print(y)
     y = tf.reshape(y, [2, 1, 766, 80])
     return y
 
