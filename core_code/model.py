@@ -1,5 +1,6 @@
 import core_code.get_contextual_layer_inputs as getIn
 from BiDAF import BiAttentionLayer
+from core_code.similarity_layer import Similarity
 from contexual_embedding import C2VecLayer
 from Modelling import ModellingLayer
 from output import OutputLayer
@@ -15,10 +16,8 @@ inputs = ['Imrahim khalil is a good boy', 'who is ibrahim ?']
 model = Sequential()
 
 model.add(C2VecLayer())
+# model.add(Similarity())
 model.add(BiAttentionLayer())
-model.add(ModellingLayer())
-model.add(OutputLayer())
-
 model(getIn.get_contextual_inputs(inputs))
 
 model.summary()
