@@ -1,6 +1,6 @@
 import core_code.get_contextual_layer_inputs as getIn
 from BiDAF import BiAttentionLayer
-from core_code.similarity_layer import Similarity
+
 from contexual_embedding import C2VecLayer
 from Modelling import ModellingLayer
 from output import OutputLayer

@@ -4,7 +4,8 @@
     <list default="true" id="6f8e4001-da9d-464b-aea4-6cd00cde7e5c" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/BiDAF.py" beforeDir="false" afterPath="$PROJECT_DIR$/BiDAF.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core_code/test.py" beforeDir="false" afterPath="$PROJECT_DIR$/core_code/test.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core_code/model.py" beforeDir="false" afterPath="$PROJECT_DIR$/core_code/model.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core_code/similarity_layer.py" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -195,7 +196,7 @@
       <workItem from="1590399028400" duration="5092000" />
       <workItem from="1590473711199" duration="11403000" />
       <workItem from="1590499265096" duration="7358000" />
-      <workItem from="1590526550587" duration="12795000" />
+      <workItem from="1590526550587" duration="20411000" />
     </task>
     <task id="LOCAL-00001" summary="Character embedding layer added.">
       <created>1589306778119</created>
@@ -274,7 +275,14 @@
       <option name="project" value="LOCAL" />
       <updated>1590572729165</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="dynamic input code added">
+      <created>1590579425998</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1590579425998</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -303,49 +311,58 @@
     <MESSAGE value="Contextual embedding layer input code added." />
     <MESSAGE value="model.py code added" />
     <MESSAGE value="upgrade similarity matrics code!" />
-    <option name="LAST_COMMIT_MESSAGE" value="upgrade similarity matrics code!" />
+    <MESSAGE value="dynamic input code added" />
+    <option name="LAST_COMMIT_MESSAGE" value="dynamic input code added" />
   </component>
   <component name="WindowStateProjectService">
     <state x="401" y="215" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1590083093804">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state x="401" y="215" key="#com.intellij.fileTypes.FileTypeChooser/0.0.1536.824@0.0.1536.824" timestamp="1590083093804" />
-    <state x="393" y="7" key="CommitChangelistDialog2" timestamp="1590572726752">
+    <state x="499" y="159" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog" timestamp="1590580055134">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="393" y="7" key="CommitChangelistDialog2/0.0.1536.824@0.0.1536.824" timestamp="1590572726752" />
-    <state x="93" y="93" width="1350" height="638" key="DiffContextDialog" timestamp="1590071599424">
+    <state x="499" y="159" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.0.1536.824@0.0.1536.824" timestamp="1590580055134" />
+    <state x="393" y="7" key="CommitChangelistDialog2" timestamp="1590579440745">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="93" y="93" width="1350" height="638" key="DiffContextDialog/0.0.1536.824@0.0.1536.824" timestamp="1590071599424" />
+    <state x="393" y="7" key="CommitChangelistDialog2/0.0.1536.824@0.0.1536.824" timestamp="1590579440745" />
+    <state x="93" y="93" width="1350" height="638" key="DiffContextDialog" timestamp="1590582912233">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state x="93" y="93" width="1350" height="638" key="DiffContextDialog/0.0.1536.824@0.0.1536.824" timestamp="1590582912233" />
     <state x="403" y="112" key="FileChooserDialogImpl" timestamp="1590474197012">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state x="403" y="112" key="FileChooserDialogImpl/0.0.1536.824@0.0.1536.824" timestamp="1590474197012" />
-    <state width="1493" height="160" key="GridCell.Tab.0.bottom" timestamp="1590579357019">
+    <state width="1493" height="263" key="GridCell.Tab.0.bottom" timestamp="1590589715363">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="160" key="GridCell.Tab.0.bottom/0.0.1536.824@0.0.1536.824" timestamp="1590579357019" />
-    <state width="1493" height="160" key="GridCell.Tab.0.center" timestamp="1590579357019">
+    <state width="1493" height="263" key="GridCell.Tab.0.bottom/0.0.1536.824@0.0.1536.824" timestamp="1590589715363" />
+    <state width="1493" height="263" key="GridCell.Tab.0.center" timestamp="1590589715363">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="160" key="GridCell.Tab.0.center/0.0.1536.824@0.0.1536.824" timestamp="1590579357019" />
-    <state width="1493" height="160" key="GridCell.Tab.0.left" timestamp="1590579357019">
+    <state width="1493" height="263" key="GridCell.Tab.0.center/0.0.1536.824@0.0.1536.824" timestamp="1590589715363" />
+    <state width="1493" height="263" key="GridCell.Tab.0.left" timestamp="1590589715363">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="160" key="GridCell.Tab.0.left/0.0.1536.824@0.0.1536.824" timestamp="1590579357019" />
-    <state width="1493" height="160" key="GridCell.Tab.0.right" timestamp="1590579357019">
+    <state width="1493" height="263" key="GridCell.Tab.0.left/0.0.1536.824@0.0.1536.824" timestamp="1590589715363" />
+    <state width="1493" height="263" key="GridCell.Tab.0.right" timestamp="1590589715363">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="160" key="GridCell.Tab.0.right/0.0.1536.824@0.0.1536.824" timestamp="1590579357019" />
-    <state x="147" y="65" key="MergeDialog" timestamp="1589958480354">
+    <state width="1493" height="263" key="GridCell.Tab.0.right/0.0.1536.824@0.0.1536.824" timestamp="1590589715363" />
+    <state x="147" y="65" key="MergeDialog" timestamp="1590582143447">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="147" y="65" key="MergeDialog/0.0.1536.824@0.0.1536.824" timestamp="1589958480354" />
-    <state x="481" y="128" key="MultipleFileMergeDialog" timestamp="1589958480363">
+    <state x="147" y="65" key="MergeDialog/0.0.1536.824@0.0.1536.824" timestamp="1590582143447" />
+    <state x="481" y="128" key="MultipleFileMergeDialog" timestamp="1590582143458">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="481" y="128" key="MultipleFileMergeDialog/0.0.1536.824@0.0.1536.824" timestamp="1589958480363" />
+    <state x="481" y="128" key="MultipleFileMergeDialog/0.0.1536.824@0.0.1536.824" timestamp="1590582143458" />
+    <state x="603" y="123" key="RollbackChangesDialog" timestamp="1590582686637">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state x="603" y="123" key="RollbackChangesDialog/0.0.1536.824@0.0.1536.824" timestamp="1590582686637" />
     <state x="132" y="0" key="SettingsEditor" timestamp="1586757681573">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
@@ -369,7 +386,7 @@
     <SUITE FILE_PATH="coverage/Spl2_nlp_QA$get_contextual_layer_inputs.coverage" NAME="get_contextual_layer_inputs Coverage Results" MODIFIED="1590353677195" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/core_code" />
     <SUITE FILE_PATH="coverage/Spl2_nlp_QA$squad_preproccess.coverage" NAME="squad_preproccess Coverage Results" MODIFIED="1587387717532" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/preproccess_squad" />
     <SUITE FILE_PATH="coverage/Spl2_nlp_QA$draft.coverage" NAME="draft Coverage Results" MODIFIED="1590071535138" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/Spl2_nlp_QA$model.coverage" NAME="model Coverage Results" MODIFIED="1590579357002" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/core_code" />
+    <SUITE FILE_PATH="coverage/Spl2_nlp_QA$model.coverage" NAME="model Coverage Results" MODIFIED="1590589715346" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/core_code" />
     <SUITE FILE_PATH="coverage/Spl2_nlp_QA$word_char_embd.coverage" NAME="word_char_embd Coverage Results" MODIFIED="1590087555800" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/core_code" />
     <SUITE FILE_PATH="coverage/Spl2_nlp_QA$test.coverage" NAME="test Coverage Results" MODIFIED="1590572250386" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/core_code" />
     <SUITE FILE_PATH="coverage/Spl2_nlp_QA$highway_layer.coverage" NAME="highway_layer Coverage Results" MODIFIED="1590085883451" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/core_code" />
