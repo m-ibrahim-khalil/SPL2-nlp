@@ -49,3 +49,11 @@ sess = tf.compat.v1.Session()
 with sess.as_default():
   assert tf.compat.v1.get_default_session() is sess
   print(sm.eval())
+
+
+
+def c2q():
+    context_to_query_attention = Softmax(axis=-1)(self.similarity_matrix)
+    print("dukche 2 c2q")
+    encoded_question = K.expand_dims(question, axis=1)
+    return K.sum(K.expand_dims(context_to_query_attention, axis=-1) * encoded_question, -2)

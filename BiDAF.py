@@ -47,6 +47,7 @@ class BiAttentionLayer(Layer):
         repeated_query_vectors = K.tile(K.expand_dims(question, axis=1), query_dim_repeat)
         print(repeated_query_vectors)
         similarity_matrix = self.compute_similarity(repeated_context_vectors, repeated_query_vectors)
+        similarity_matrix = tf.reshape(similarity_matrix,[self.shape[2],self.shape[2]])
         print(similarity_matrix)
         return similarity_matrix
         '''
@@ -71,13 +72,8 @@ class BiAttentionLayer(Layer):
 
     @tf.function
     def C2Q_Attention(self, question):
-        context_to_query_attention = Softmax(axis=-1)(self.similarity_matrix)
-        print("dukche 2 c2q")
-        encoded_question = K.expand_dims(question, axis=1)
-        return K.sum(K.expand_dims(context_to_query_attention, axis=-1) * encoded_question, -2)
-        '''
         U_A = tf.constant([])
-        
+        print("dukche c2q")
         for j in range(self.shape[2]):
             temp = tf.zeros(shape=(self.shape[3],), dtype=tf.float32)
             for i in range(self.shape[2]):
@@ -89,8 +85,6 @@ class BiAttentionLayer(Layer):
         U_A = tf.reshape(U_A, shape=(self.shape[2], self.shape[3]))
 
         return U_A
-
-        '''
 
     @tf.function
     def Q2C_Attention(self, context):
