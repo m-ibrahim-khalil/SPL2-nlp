@@ -1,89 +1,85 @@
+
+
 '''import tensorflow as tf
-from keras.layers import Layer
-
-
-a = tf.constant([[0.1,0.2,0.3],[0.3,0.4,0.5]])
-b = tf.constant([[0.5,0.6,0.7],[0.7,0.8,0.9]])
-
-w=tf.constant([1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0])
-
-similarity_matrix=tf.constant([])
-print(similarity_matrix)
-
-for i in range(2) :
-    for j in range(2):
-        c=tf.concat([a[i],b[j],tf.multiply(a[i],b[j])],0)
-        print(c)
-        alpha=tf.tensordot(w,c,1)
-        alpha=tf.reshape(alpha,shape=(1,))
-        similarity_matrix=tf.concat([similarity_matrix,alpha],0)
-
-similarity_matrix=tf.reshape(similarity_matrix,shape=(2,2))
-print(similarity_matrix)
-print(tf.nn.softmax(similarity_matrix))'''
-'''import tensorflow as tf
-
-a=[[1,2],[3,4],[5,6]]
-
-w=[1,1]
-
-p=tf.tensordot(a,tf.transpose(w),1)
-
-print(tf.nn.softmax(p))'''
-
-
-
-
-
-
-
-
-
-'''class MyLayer1(Layer):
-    def __init__(self,**kwargs):
-        super(MyLayer1,self).__init__(**kwargs)
-
-    def call(self, x):
-        return x
-
-class MyLayer2(Layer):
-    def __init__(self,**kwargs):
-        super(MyLayer2,self).__init__(**kwargs)
-
-    def call(self, x):
-        temp_list=list()
-        a=tf.ones([1,])
-        b=tf.tensordot(x,a,1)
-        temp_list.append(b.numpy()) # I stucked here. I can't extract the value of b.
-        return x
-
-x=tf.Variable(tf.zeros([1,]))
-myLayer1=MyLayer1()
-myLayer2=MyLayer2()
-
-y=myLayer1(x)
-myLayer2(y)'''
-
-
-
+from keras import Sequential
 
 from Word_embedding import W2VecLayer
 from contexual_embedding import C2VecLayer
 from BiDAF import BiAttentionLayer
 from Modelling import ModellingLayer
 from output import OutputLayer
+import get_contextual_layer_inputs as getIn
 
-w2vec=W2VecLayer(5)
-x=w2vec.call(['i am dip','who i'])
-c2vec=C2VecLayer()
-y=c2vec(x)
-bidaf = BiAttentionLayer()
-z=bidaf(y)
-modelling=ModellingLayer()
-a=modelling(z)
-output=OutputLayer()
-b=output(a)
 
-print(b)
+def custom_loss_func(y_actual,y_predicted) :
+    p1_actual=y_actual[0]
+    p1_predicted=y_predicted[0]
 
+    p2_actual=y_actual[1]
+    p2_predicted=y_predicted[1]
+
+    cce=tf.keras.losses.CategoricalCrossentropy()
+
+    return cce(p1_actual,p1_predicted) + cce(p2_actual,p2_predicted)
+
+
+
+
+#word2vec=W2VecLayer(3)
+#input=word2vec.call(['i am dip','who i'])
+#output=tf.constant([[0,0,1],[0,0,1]], dtype=tf.float32)
+
+model=Sequential()
+model.add(C2VecLayer())
+model.add(BiAttentionLayer())
+model.add(ModellingLayer())
+model.add(OutputLayer())
+model.compile(loss=custom_loss_func , optimizer='adam')
+
+y=model(getIn(['i am dip','who i']))
+model.summary()
+
+#model.fit(x=getIn(['i am dip','who i']), y=output, steps_per_epoch=1, epochs=5)
+'''
+
+import get_contextual_layer_inputs as getIn
+from BiDAF import BiAttentionLayer
+from contexual_embedding import C2VecLayer
+from Modelling import ModellingLayer
+from output import OutputLayer
+import tensorflow as tf
+from keras.models import Sequential
+
+# passage_input = keras.layers.Input(shape=(None, 400), dtype='float32', name="passage_input")
+# question_input = keras.layers.Input(shape=(None, 400), dtype='float32', name="question_input")
+# y = getIn.get_contextual_inputs(input)
+
+def custom_loss_func(y_actual,y_predicted) :
+    p1_actual=y_actual[0]
+    p1_predicted=y_predicted[0]
+
+    p2_actual=y_actual[1]
+    p2_predicted=y_predicted[1]
+
+    cce=tf.keras.losses.CategoricalCrossentropy()
+
+    return cce(p1_actual,p1_predicted) + cce(p2_actual,p2_predicted)
+
+
+
+inputs = ['Ibrahim khalil is a good boy', 'who is ibrahim ?']
+
+model = Sequential()
+
+model.add(C2VecLayer())
+model.add(BiAttentionLayer())
+model.add(ModellingLayer())
+model.add(OutputLayer())
+model.compile(loss=custom_loss_func,optimizer='adam')
+
+output=tf.zeros(shape=(2,766),dtype=tf.float32)
+
+model.fit(x=getIn.get_contextual_inputs(inputs),y=output,steps_per_epoch=1)
+
+model.summary()
 
