@@ -1,5 +1,3 @@
-"""Downloads SQuAD train and dev sets, preprocessed and writes tokenized versions to file"""
-
 import os
 import random
 import json
