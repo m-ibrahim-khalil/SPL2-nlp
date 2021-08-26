@@ -18,3 +18,4 @@ class Vectors:
 
     def load_vectors(self):
         return self.vectors
+  
