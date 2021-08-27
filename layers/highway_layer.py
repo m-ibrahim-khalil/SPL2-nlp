@@ -1,3 +1,9 @@
+"""
+    Highway layer inputs a combine matrix of word embedding, character embedding
+    it adjust the relative contribution from the word embedding and the character embedding
+    Output a matrix with same the dimension of input matrix
+"""
+
 import tensorflow.keras.backend as K
 from tensorflow.keras.layers import Dense, Activation, Multiply, Add, Lambda
 from tensorflow.keras.layers import Layer
@@ -8,6 +14,9 @@ K.set_floatx('float64')
 
 
 class Highway(Layer):
+    activation = None
+    transform_gate_bias = None
+
     def __init__(self, activation='tanh', transform_gate_bias=-3, **kwargs):
         self.activation = activation
         self.transform_gate_bias = transform_gate_bias
